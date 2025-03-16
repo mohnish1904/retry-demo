@@ -18,10 +18,15 @@ public class RetryService {
     }
 
     public void retryServiceHandler(String type){
-        retryTemplate.execute(args1 -> {
-            serviceLogic(type);
-            return null;
-        });
+        retryTemplate.execute(
+            arg1 -> {
+                serviceLogic(type);
+                return null;
+            },
+            arg2 -> {
+                System.out.println("recovery flow");
+                return null;
+            });
     }
 
     void serviceLogic(String type) {

@@ -27,7 +27,7 @@ public class RetryableDemo {
         }
     }
 
-    @Recover
+    @Recover()
     public void recoverMethod(){
         System.out.println("Recovery Flow !!");
     }
