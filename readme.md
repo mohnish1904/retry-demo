@@ -33,12 +33,26 @@ Refer below class:
 
 This approach is mostly annotation based, we need to annotate the main spring boot application class with @EnableRetry.
 
-![enable-retry](assets/main class.jpg)
+```
+    @SpringBootApplication
+    @EnableRetry
+    public class SpringRetryDemoApplication {
+        public static void main(String[] args) {
+            SpringApplication.run(SpringRetryDemoApplication.class, args);
+        }
+    }
+```
 
 Now, In your service/business class, on the method where you want to implement the retry, annotate the method with
 @Retryable and provide configuration for it.
 
-![retryable](assets/retryable_annot.jpg)
+```
+    @Retryable(
+        retryFor = RuntimeException.class,
+        maxAttempts = 4,
+        backoff = @Backoff(delay = 1000, multiplier = 1.5, maxDelay = 10000))
+    public void methodToRetry(String s) {
+```
 
 We can provide for which exceptions (can also use custom exceptions) do we need to do the retry and the max attempts 
 for the retry. 
@@ -53,7 +67,12 @@ Note* max attempts is including the normal flow i.e. if maxAttempts = 4, then
 Now to handle recovery flow, create a method that will handle the error when max attempts runs out.
 Annotate teh method with @Recover.
 
-![recovery](assets/recover_annot.jpg)
+```
+    @Recover()
+    public void recoverMethod(){
+        System.out.println("Recovery Flow !!");
+    }
+```
 
 ### Test
 Hit API : GET - http://localhost:8080/retryable/exception
@@ -151,7 +170,25 @@ Here retryTemplate.execute() will take 2 callbacks, RetryCallback and RecoverCal
 arg1 and arg2 are the Retry Contexts, it will contain the information on the current retry like getRetryCount, 
 getLastThrowable etc.  
 
-![servicehandler](assets/retryServicehandler.jpg)
+```
+    private final RetryTemplate retryTemplate;
+
+    public RetryService(RetryTemplate retryTemplate) {
+        this.retryTemplate = retryTemplate;
+    }
+
+    public void retryServiceHandler(String type){
+        retryTemplate.execute(
+                retryContext -> {
+                    serviceLogic(type);
+                    return null;
+            },
+                retryContext -> {
+                    System.out.println("recovery flow");
+                    return null;
+            });
+    }
+```
 
 > retryTemplate.execute(Method_to_retry, Recovery_Method)
 

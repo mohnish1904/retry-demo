@@ -19,13 +19,13 @@ public class RetryService {
 
     public void retryServiceHandler(String type){
         retryTemplate.execute(
-            arg1 -> {
-                serviceLogic(type);
-                return null;
+                retryContext -> {
+                    serviceLogic(type);
+                    return null;
             },
-            arg2 -> {
-                System.out.println("recovery flow");
-                return null;
+                retryContext -> {
+                    System.out.println("recovery flow");
+                    return null;
             });
     }
 
