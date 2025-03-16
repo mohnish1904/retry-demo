@@ -58,7 +58,7 @@ Annotate teh method with @Recover.
 ### Test
 Hit API : GET - http://localhost:8080/retryable/exception
 
-## Using Retry template (Imperative way) - In progress
+## Using Retry template (Imperative way)
 Refer below class:
 > java/com/example/spring_retry_demo/retry_interface/RetryTemplateConfig.java
 
