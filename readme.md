@@ -194,3 +194,6 @@ getLastThrowable etc.
 
 ### Test
 Hit API : GET - http://localhost:8080/retrytemplate/exception
+
+### References :
+https://github.com/spring-projects/spring-retry
