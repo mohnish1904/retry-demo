@@ -150,7 +150,7 @@ Now we can set the retry policy and backoff policy in retryTemplate.
 
 Another way for building retry template is to use the retry template builder.
 ```
-    retrun RetryTemplate.builder()
+    return RetryTemplate.builder()
                 .maxAttempts(4)
                 .withTimeout(Duration.ofSeconds(5))
                 .retryOn(RuntimeException.class)
